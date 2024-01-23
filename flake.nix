@@ -1,8 +1,8 @@
 {
-    description = "Owl for Exchange (Cracked License)";
+    description = "Owl for Exchange";
 
     inputs = {
-        nixpkgs.url = "nixpkgs/nixos-unstable";
+        nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
         flake-utils.url = "github:numtide/flake-utils";
 
         original-owl = {
@@ -12,22 +12,25 @@
     };
 
     outputs = inputs @ { self, nixpkgs, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
-        let pkgs = nixpkgs.legacyPackages.${system}; in rec {
-            licensePatch = builtins.readFile ./license-patch.js;
+    flake-utils.lib.eachDefaultSystem (
+        system: let
+            pkgs = nixpkgs.legacyPackages.${system};
+            inherit (pkgs) lib;
 
+            licensePatch = builtins.readFile ./license-patch.js;
+        in {
             defaultPackage = pkgs.stdenvNoCC.mkDerivation {
                 name = "owl-exchange";
                 src = inputs.original-owl;
                 unpackPhase = ''
-                    ${pkgs.unzip}/bin/unzip $src
+                    ${lib.getExe pkgs.unzip} $src
                 '';
                 patchPhase = ''
                     echo "${licensePatch}" >> license.js
                 '';
                 dontConfigure = true;
                 buildPhase = ''
-                    ${pkgs.zip}/bin/zip -r owl.xpi *
+                    ${lib.getExe pkgs.zip} -r owl.xpi *
                 '';
                 installPhase = ''
                     mkdir -p $out/addon
