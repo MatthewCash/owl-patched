@@ -37,7 +37,7 @@
     "original-owl": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-DZ+Z7Wj6trZAYVFRp6bLIqo0dHzN41U4AXUA8Qsfaco=",
+        "narHash": "sha256-aimdo+CeEf8HblDCelkawOFq077s7iRNL37K1jOnMLk=",
         "type": "file",
         "url": "https://www.beonex.com/owl/owl.xpi"
       },
